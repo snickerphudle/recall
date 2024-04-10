@@ -1,0 +1,10 @@
+{
+    "name": "Recall",
+    "version": "1.0.0",
+    "description": "Recall helps you remember things from the last time you read a PDF.",
+    "manifest_version": 3,
+    "author": "William Nguyen",
+    "action": {
+        "default_popup": "index.html"
+    }
+}

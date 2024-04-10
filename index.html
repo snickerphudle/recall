@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary UI</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h2 style="white-space: nowrap;">Summarize the Previous</h2>
+
+        <div class="row">
+            <div class="col"></div>
+            <div class="col">
+                <button id="minusBtn" class="btn btn-primary btn-danger">-</button>
+            </div>
+            <div class="col">
+                <div class="row">
+                    <input id="numberInput" type="number" value="5">
+                </div>
+                <div class="row">
+                    <p>Pages</p>
+                </div>
+            </div>
+            <div class="col">
+                <button id="plusBtn" class="btn btn-primary btn-success">+</button>
+            </div>
+            <div class="col"></div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-primary btn-lg btn-block" onclick="generateSummary()">Generate Summary</button>
+            </div>
+        </div>
+
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
