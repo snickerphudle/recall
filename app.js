@@ -24,48 +24,68 @@ doItBtn.addEventListener('click', () => {
     console.log(`Let's do it with value: ${value}`);
 });
 
-async function generateSummary(pdfUrl, numPages) {
-    // Get the text from the PDF
-    const text = await getText(pdfUrl, numPages);
+async function generateSummary() {
+    //get page number and URL of PDF file
+    const pdfURL = window.location.href;
+    const pageNumberElement = document.getElementById('pageSelector');
+    if (pageNumberElement) {
+        const pageNumber = parseInt(pageNumberElement.value, 10);
+        console.log(`Current page number: ${pageNumber}`);
+    } else {
+        console.error('Element with ID "pageSelector" not found');
+    }
 
-    // Make API call to OpenAI's GPT-3 model
-    const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
+    const num_pages = document.getElementById('numberInput');
+    if (numberInputElement) {
+        const numberInputValue = parseInt(numberInputElement.value, 10);
+        console.log(`Value from numberInput: ${numberInputValue}`);
+    } else {
+        console.error('Element with ID "numberInput" not found');
+    }
+
+    const response = await fetch('http://localhost:3000/generate-summary', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': process.env.OPENAI_API_KEY
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            prompt: text,
-            max_tokens: 100 // Adjust as needed
+            pdfUrl: pdfURL,
+            numPages: numberInputValue,
+            currPage: pageNumber
         })
     });
 
-    const data = await response.json();
-
-    // The summary is in the 'choices' array in the returned data
-    const summary = data.choices[0].text.trim();
-
-    return summary;
-
-    return summary;
-}
-
-async function getText(pdfUrl, numPages) {
-    // Load the PDF
-    const loadingTask = pdfjsLib.getDocument(pdfUrl);
-    const pdf = await loadingTask.promise;
-
-    let text = '';
-    for (let i = pdf.numPages; i > pdf.numPages - numPages; i--) {
-        // Get the page
-        const page = await pdf.getPage(i);
-
-        // Extract the text
-        const content = await page.getTextContent();
-        const strings = content.items.map(item => item.str);
-        text += strings.join(' ');
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return text;
+    const data = await response.json();
+
+    // Select the summary-box element
+    let summaryBox = document.querySelector('.summary-box');
+
+    // Check if the summary-box element exists
+    if (summaryBox) {
+        // If it exists, replace its HTML content with the summary
+        summaryBox.innerHTML = data.summary;
+    } else {
+        // If it doesn't exist, create a new div element
+        summaryBox = document.createElement('div');
+
+        // Add the class "summary-box" to the new div
+        summaryBox.classList.add('summary-box');
+
+        // Set the text content of the new div
+        summaryBox.textContent = data.summary;
+
+        // Select the outer-container element
+        const outerContainer = document.querySelector('.outer-container');
+
+        // Append the new div to the outer-container
+        if (outerContainer) {
+            outerContainer.appendChild(summaryBox);
+        } else {
+            console.error('Element with class "outer-container" not found');
+        }
+    }
 }
